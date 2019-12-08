@@ -1,6 +1,10 @@
 package edu.javacourse.studentorder;
 
 import edu.javacourse.studentorder.domain.*;
+import edu.javacourse.studentorder.domain.children.AnswerChildren;
+import edu.javacourse.studentorder.domain.register.AnswerCityRegister;
+import edu.javacourse.studentorder.domain.student.AnswerStudent;
+import edu.javacourse.studentorder.domain.wedding.AnswerWedding;
 import edu.javacourse.studentorder.mail.MailSender;
 import edu.javacourse.studentorder.validator.ChildValidator;
 import edu.javacourse.studentorder.validator.CityRegisterValidator;
@@ -47,10 +51,10 @@ public class StudentOrderValidator {
 
     public void checkOneOrder(StudentOrder so){
         AnswerCityRegister cityAnswer = checkCityRegister(so);
-        AnswerWedding wedAnswer = checkWedding(so);
-        AnswerStudent studAnswer = checkStudent(so);
-        AnswerChildren childAnswer = checkChildren(so);
-        sendMail(so);
+//        AnswerWedding wedAnswer = checkWedding(so);
+//        AnswerStudent studAnswer = checkStudent(so);
+//        AnswerChildren childAnswer = checkChildren(so);
+//        sendMail(so);
     }
 
 

@@ -1,7 +1,9 @@
 package edu.javacourse.studentorder.validator;
 
-import edu.javacourse.studentorder.domain.AnswerCityRegister;
+import edu.javacourse.studentorder.domain.register.AnswerCityRegister;
+import edu.javacourse.studentorder.domain.register.CityRegisterCheckerResponse;
 import edu.javacourse.studentorder.domain.StudentOrder;
+import edu.javacourse.studentorder.exception.CityRegisterException;
 
 public class CityRegisterValidator {
 
@@ -12,16 +14,18 @@ public class CityRegisterValidator {
     private CityRegisterChecker personChecker;
 
     public CityRegisterValidator() {
-        personChecker = new RealCityRegisterChecker();
+        personChecker = new FakeCityRegisterChecker();
     }
 
-    //transmite ca argument tipul edu.javacourse.studentorder.domain.StudentOrder penutr a verifica Numele Prenumele penutr verificare
-    //metoda de tip AnsewerCityRegister care returneaza ceea ce verificam
-      public  AnswerCityRegister checkCityRegister(StudentOrder so){
+    public  AnswerCityRegister checkCityRegister(StudentOrder so){
+        try {
+            CityRegisterCheckerResponse hans = personChecker.checkPerson(so.getHusband());
+            CityRegisterCheckerResponse wans = personChecker.checkPerson(so.getWife());
+            CityRegisterCheckerResponse cans = personChecker.checkPerson(so.getChild());
+        }catch (CityRegisterException ex){
+            ex.printStackTrace();//informatii despre eroare
+        }
 
-        personChecker.checkPerson(so.getHusband());
-        personChecker.checkPerson(so.getWife());
-        personChecker.checkPerson(so.getChild());
 
         AnswerCityRegister ans =  new AnswerCityRegister();
         return ans;
