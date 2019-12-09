@@ -1,16 +1,22 @@
 package edu.javacourse.studentorder.validator;
 
+import edu.javacourse.studentorder.domain.Child;
+import edu.javacourse.studentorder.domain.Person;
 import edu.javacourse.studentorder.domain.register.AnswerCityRegister;
-import edu.javacourse.studentorder.domain.register.CityRegisterCheckerResponse;
+import edu.javacourse.studentorder.domain.register.AnswerCityRegisterItem;
+import edu.javacourse.studentorder.domain.register.CityRegisterResponse;
 import edu.javacourse.studentorder.domain.StudentOrder;
 import edu.javacourse.studentorder.exception.CityRegisterException;
+import edu.javacourse.studentorder.exception.TransportException;
+
+import java.util.List;
 
 public class CityRegisterValidator {
 
    public String hostName;
     String login;
     String pass;
-
+    private static final String IN_CODE = "NO_GRN";
     private CityRegisterChecker personChecker;
 
     public CityRegisterValidator() {
@@ -18,16 +24,38 @@ public class CityRegisterValidator {
     }
 
     public  AnswerCityRegister checkCityRegister(StudentOrder so){
-        try {
-            CityRegisterCheckerResponse hans = personChecker.checkPerson(so.getHusband());
-            CityRegisterCheckerResponse wans = personChecker.checkPerson(so.getWife());
-            CityRegisterCheckerResponse cans = personChecker.checkPerson(so.getChild());
-        }catch (CityRegisterException ex){
-            ex.printStackTrace();//informatii despre eroare
+        AnswerCityRegister ans =  new AnswerCityRegister();
+
+        ans.addItem(checkPerson(so.getHusband()));
+        ans.addItem(checkPerson(so.getWife()));
+        for (Child child : so.getChildren()) {
+            ans.addItem(checkPerson(child));
         }
 
+        return ans;
+    }
+    private AnswerCityRegisterItem checkPerson(Person person){
+        AnswerCityRegisterItem.CityStatus status = null;
+        AnswerCityRegisterItem.CityError error = null;
+        try{
+            CityRegisterResponse tmp = personChecker.checkPerson(person);
+            status = tmp.isExisting() ? AnswerCityRegisterItem.CityStatus.YES : AnswerCityRegisterItem.CityStatus.NO;
+        }catch (CityRegisterException ex){
+            ex.printStackTrace(System.out);
+            status = AnswerCityRegisterItem.CityStatus.ERROR;
+            error = new AnswerCityRegisterItem.CityError(ex.getCode(), ex.getMessage());
+        }catch (TransportException ex){
+            ex.printStackTrace(System.out);
+            status = AnswerCityRegisterItem.CityStatus.ERROR;
+            error = new AnswerCityRegisterItem.CityError(IN_CODE,ex.getMessage());
+        }catch (Exception ex){
+            ex.printStackTrace(System.out);
+            status = AnswerCityRegisterItem.CityStatus.ERROR;
+            error = new AnswerCityRegisterItem.CityError(IN_CODE, ex.getMessage());
+        }
 
-        AnswerCityRegister ans =  new AnswerCityRegister();
+        AnswerCityRegisterItem ans = new AnswerCityRegisterItem(status,person,error);
+
         return ans;
     }
 }

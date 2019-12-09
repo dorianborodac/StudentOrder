@@ -10,6 +10,10 @@ import edu.javacourse.studentorder.validator.ChildValidator;
 import edu.javacourse.studentorder.validator.CityRegisterValidator;
 import edu.javacourse.studentorder.validator.StudentValidator;
 import edu.javacourse.studentorder.validator.WeddingValidator;
+import edu.javacourse.studentorder.domain.StudentOrder;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class StudentOrderValidator {
 
@@ -33,20 +37,22 @@ public class StudentOrderValidator {
     }
     public void checkAll(){
 
-            StudentOrder[] soArray = readStudentOrders();
+            List<StudentOrder> soList = readStudentOrders();
 
-        for (int i = 0; i < soArray.length; i++) {
-            checkOneOrder(soArray[i]);
+        for (StudentOrder so:
+             soList) {
+            checkOneOrder(so);
         }
 
     }
 
-    public StudentOrder[] readStudentOrders(){
-        StudentOrder[] soArray = new StudentOrder[3];
-        for(int i = 0;i<soArray.length;i++){
-            soArray[i] =  SaveStudentOrder.buildStudentOrder(i);
+    public List<StudentOrder> readStudentOrders(){
+        List<StudentOrder> soList = new LinkedList<>();
+        for (int i = 0; i < 5; i++) {
+            StudentOrder so =  SaveStudentOrder.buildStudentOrder(i);
+            soList.add(so);
         }
-        return soArray;
+        return soList;
     }
 
     public void checkOneOrder(StudentOrder so){
